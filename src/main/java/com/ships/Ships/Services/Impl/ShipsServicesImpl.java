@@ -4,9 +4,9 @@ import com.ships.Ships.Models.Ship;
 import com.ships.Ships.Repository.ShipsRepository;
 import com.ships.Ships.Services.ShipsServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,9 +19,9 @@ public class ShipsServicesImpl implements ShipsServices {
     private ShipsRepository shipsRepository;
 
     @Override
-    @Cacheable("ships")
-    public List<Ship> getAllShips(Pageable pageable) {
-        return  shipsRepository.findAllShips(pageable);
+    @Cacheable(value = "ships")
+    public List<Ship> getAllShips() {
+        return  shipsRepository.findAllShips();
     }
 
     @Override
@@ -37,18 +37,21 @@ public class ShipsServicesImpl implements ShipsServices {
     }
 
     @Override
+    @CachePut(value = "ships", key = "#ship.id")
     public String saveShip(Ship ship){
         shipsRepository.save(ship);
-        return "Nave guardada con exito";
+        return "Nave guardada con exito, ID: " + ship.getId();
     }
 
     @Override
+    @CacheEvict(value="ships",  allEntries = true) 
     public String updateShip(Ship ship){
         shipsRepository.save(ship);
         return "Nave actualizada con exito";
     }
 
     @Override
+    @CacheEvict(value = "ships", key = "#id")
     public String deleteShip(Long id){
         shipsRepository.deleteById(id);
         return "Nave eliminada con exito";

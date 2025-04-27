@@ -5,11 +5,9 @@ import com.ships.Ships.Services.ShipsServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/ships")
@@ -21,8 +19,8 @@ public class ShipsControllers {
 
     @Operation(summary = "View a list of available ships")
     @GetMapping
-    public ResponseEntity<?> getAllShips(Pageable pageable){
-        return ResponseEntity.ok(shipsServices.getAllShips(pageable));
+    public ResponseEntity<?> getAllShips(){
+        return ResponseEntity.ok(shipsServices.getAllShips());
     }
 
     @Operation(summary = "Get a ship by Id")
